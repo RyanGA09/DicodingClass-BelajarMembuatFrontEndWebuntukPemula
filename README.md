@@ -1,3 +1,3 @@
-# Dicoding Class (Belajar Membuat FrontEnd Web untuk Pemula)
+# Dicoding Class (Learn to Build FrontEnd Web for Beginners)
 
-This is a codes practices for Dicoding Class about "Belajar Membuat FrontEnd Web untuk Pemula"
+This is the code practice for Dicoding's Class on "Belajar Membuat FrontEnd Web untuk Pemula (Learn to Build FrontEnd Web for Beginners)"
