@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
   <head>
     <title>Event World</title>
     <style>
@@ -11,6 +11,7 @@
         border: 2px solid black;
         padding: 15px;
       }
+
       .button {
         margin: 8px;
         height: 40px;
@@ -22,12 +23,13 @@
       <h3 id="caption">Silakan tekan salah satu tombol di bawah...</h3>
       <button class="button" id="tombol">Tombol Custom Event</button>
     </div>
+
     <script>
-      // tulis kode kamu di sini
       const changeCaption = new Event("changeCaption");
 
       window.addEventListener("load", function () {
         const tombol = document.getElementById("tombol");
+
         tombol.addEventListener("changeCaption", customEventHandler);
         tombol.addEventListener("click", function () {});
       });
