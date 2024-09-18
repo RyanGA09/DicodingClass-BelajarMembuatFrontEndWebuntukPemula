@@ -11,6 +11,8 @@
 
 const todos = [];
 const RENDER_EVENT = "render-todo";
+const SAVED_EVENT = "saved-todo";
+const STORAGE_KEY = "TODO_APPS";
 
 function generateId() {
   return +new Date();
@@ -39,6 +41,17 @@ function addTodo() {
   todos.push(todoObject);
 
   document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
+}
+
+function addTaskToCompleted(todoId) {
+  const todoTarget = findTodo(todoId);
+
+  if (todoTarget == null) return;
+
+  todoTarget.isCompleted = true;
+  document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
 }
 
 function makeTodo(todoObject) {
@@ -86,15 +99,6 @@ function makeTodo(todoObject) {
   return container;
 }
 
-function addTaskToCompleted(todoId) {
-  const todoTarget = findTodo(todoId);
-
-  if (todoTarget == null) return;
-
-  todoTarget.isCompleted = true;
-  document.dispatchEvent(new Event(RENDER_EVENT));
-}
-
 function findTodo(todoId) {
   for (const todoItem of todos) {
     if (todoItem.id === todoId) {
@@ -102,24 +106,6 @@ function findTodo(todoId) {
     }
   }
   return null;
-}
-
-function removeTaskFromCompleted(todoId) {
-  const todoTarget = findTodoIndex(todoId);
-
-  if (todoTarget === -1) return;
-
-  todos.splice(todoTarget, 1);
-  document.dispatchEvent(new Event(RENDER_EVENT));
-}
-
-function undoTaskFromCompleted(todoId) {
-  const todoTarget = findTodo(todoId);
-
-  if (todoTarget == null) return;
-
-  todoTarget.isCompleted = false;
-  document.dispatchEvent(new Event(RENDER_EVENT));
 }
 
 function findTodoIndex(todoId) {
@@ -132,12 +118,52 @@ function findTodoIndex(todoId) {
   return -1;
 }
 
+function removeTaskFromCompleted(todoId) {
+  const todoTarget = findTodoIndex(todoId);
+
+  if (todoTarget === -1) return;
+
+  todos.splice(todoTarget, 1);
+  document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
+}
+
+function undoTaskFromCompleted(todoId) {
+  const todoTarget = findTodo(todoId);
+
+  if (todoTarget == null) return;
+
+  todoTarget.isCompleted = false;
+  document.dispatchEvent(new Event(RENDER_EVENT));
+  saveData();
+}
+
+function saveData() {
+  if (isStorageExist()) {
+    const parsed = JSON.stringify(todos);
+    localStorage.setItem(STORAGE_KEY, parsed);
+    document.dispatchEvent(new Event(SAVED_EVENT));
+  }
+}
+
+function isStorageExist() /* boolean */ {
+  if (typeof Storage === undefined) {
+    alert("Browser kamu tidak mendukung local storage");
+    return false;
+  }
+  return true;
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const submitForm = document.getElementById("form");
   submitForm.addEventListener("submit", function (event) {
     event.preventDefault();
     addTodo();
   });
+});
+
+document.addEventListener(SAVED_EVENT, function () {
+  console.log(localStorage.getItem(STORAGE_KEY));
 });
 
 // document.addEventListener(RENDER_EVENT, function () {
